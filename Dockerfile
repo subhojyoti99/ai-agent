@@ -17,8 +17,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Expose the FastAPI port (changed from 8080 to 9030)
-EXPOSE 9030
+EXPOSE 8080
 
 # Command to run the app with uvicorn on port 9030
 # If your FastAPI instance is named `app` inside voice_agent.py
-CMD ["uvicorn", "voice_agent:app", "--host", "0.0.0.0", "--port", "9030"]
+CMD ["uvicorn", "voice_agent:app", "--host", "0.0.0.0", "--port", "8080"]
