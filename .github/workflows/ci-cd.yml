@@ -43,7 +43,7 @@ jobs:
           username: ${{ secrets.DO_USER }}
           key: ${{ secrets.DO_SSH_KEY }}
           script: |
-            docker pull ***/ai-agent:latest
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/ai-agent:latest
             docker stop ai-agent || true
             docker rm ai-agent || true
-            docker run -d --name ai-agent -p 80:8080 ***/ai-agent:latest
+            docker run -d --name ai-agent -p 80:8080 ${{ secrets.DOCKERHUB_USERNAME }}/ai-agent:latest
