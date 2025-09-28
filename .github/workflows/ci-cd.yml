@@ -29,7 +29,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: your-dockerhub-username/ai-agent:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ai-agent:latest
 
   deploy:
     name: Deploy to DigitalOcean
@@ -43,7 +43,7 @@ jobs:
           username: ${{ secrets.DO_USER }}
           key: ${{ secrets.DO_SSH_KEY }}
           script: |
-            docker pull your-dockerhub-username/ai-agent:latest
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/ai-agent:latest
             docker stop ai-agent || true
             docker rm ai-agent || true
-            docker run -d --name ai-agent -p 80:8080 your-dockerhub-username/ai-agent:latest
+            docker run -d --name ai-agent -p 80:8080 ${{ secrets.DOCKERHUB_USERNAME }}/ai-agent:latest
