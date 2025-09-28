@@ -1,0 +1,14 @@
+twilio
+python-dotenv
+#-------------------------------------
+fastapi
+uvicorn
+langchain
+langchain-community
+langchain_openai
+fastembed
+chromadb
+hf_xet
+
+python-multipart
+#.....
