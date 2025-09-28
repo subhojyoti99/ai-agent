@@ -42,9 +42,28 @@ jobs:
           host: ${{ secrets.DO_HOST }}
           username: ${{ secrets.DO_USER }}
           key: ${{ secrets.DO_SSH_KEY }}
-          port: 22 # only needed if you use custom SSH port
+          port: 22
           script: |
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/ai-agent:latest
-            docker stop ai-agent || true
-            docker rm ai-agent || true
-            docker run -d --name ai-agent -p 80:8080 ${{ secrets.DOCKERHUB_USERNAME }}/ai-agent:latest
+            # Check if Docker is installed, if not install it
+            if ! command -v docker &> /dev/null; then
+              echo "Docker not found. Installing Docker..."
+              curl -fsSL https://get.docker.com -o get-docker.sh
+              sudo sh get-docker.sh
+              sudo systemctl start docker
+              sudo systemctl enable docker
+              sudo usermod -aG docker $USER
+              echo "Docker installed successfully"
+              # After adding user to docker group, we need to use sudo for this session
+              echo "Using sudo for Docker commands in this session..."
+              sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/ai-agent:latest
+              sudo docker stop ai-agent || true
+              sudo docker rm ai-agent || true
+              sudo docker run -d --name ai-agent -p 80:8080 ${{ secrets.DOCKERHUB_USERNAME }}/ai-agent:latest
+            else
+              echo "Docker is already installed"
+              # Try without sudo first, fall back to sudo if needed
+              docker pull ${{ secrets.DOCKERHUB_USERNAME }}/ai-agent:latest || sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/ai-agent:latest
+              docker stop ai-agent || sudo docker stop ai-agent || true
+              docker rm ai-agent || sudo docker rm ai-agent || true
+              docker run -d --name ai-agent -p 80:8080 ${{ secrets.DOCKERHUB_USERNAME }}/ai-agent:latest || sudo docker run -d --name ai-agent -p 80:8080 ${{ secrets.DOCKERHUB_USERNAME }}/ai-agent:latest
+            fi
