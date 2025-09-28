@@ -222,4 +222,4 @@ def health_check():
 
 if __name__ == "__main__":
     print("Starting AI Agent!")
-    uvicorn.run("voice_agent:app", host="0.0.0.0", port=9030)
+    uvicorn.run("voice_agent:app", host="0.0.0.0", port=8080)
