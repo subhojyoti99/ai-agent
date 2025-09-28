@@ -32,16 +32,17 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/ai-agent:latest
 
   deploy:
-    name: Deploy to DigitalOcean
+    name: Deploy to Paperspace VM
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
-      - name: SSH & deploy to Droplet
+      - name: SSH & deploy to Paperspace VM
         uses: appleboy/ssh-action@v1.2.1
         with:
           host: ${{ secrets.DO_HOST }}
           username: ${{ secrets.DO_USER }}
           key: ${{ secrets.DO_SSH_KEY }}
+          port: 22 # only needed if you use custom SSH port
           script: |
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/ai-agent:latest
             docker stop ai-agent || true
